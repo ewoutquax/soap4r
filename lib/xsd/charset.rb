@@ -11,6 +11,7 @@ module XSD
 
 module Charset
   # @internal_encoding = $KCODE
+  @internal_encoding = 'UTF8'
 
   class XSDError < StandardError; end
   class CharsetError < XSDError; end
