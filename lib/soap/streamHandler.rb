@@ -130,10 +130,10 @@ class HTTPStreamHandler < StreamHandler
   end
 
 public
-  
+
   attr_reader :client
   attr_accessor :wiredump_file_base
-  
+
   MAX_RETRY_COUNT = 10       	# [times]
 
   def self.create(options)
@@ -223,6 +223,9 @@ private
       filename = @wiredump_file_base + '_request.xml'
       f = File.open(filename, "w")
       f << conn_data.send_string
+      Thread.current[:ferryres_request_id] = (Time.now.to_f * 1000).to_i
+      FERRYRES_LOGGER.info "Message for #{Thread.current[:ferryres_request_id]}"
+      FERRYRES_LOGGER.info(conn_data.send_string)
       f.close
     end
 
@@ -257,6 +260,8 @@ private
       filename = @wiredump_file_base + '_response.xml'
       f = File.open(filename, "w")
       f << receive_string
+      FERRYRES_LOGGER.info "Response for #{Thread.current[:ferryres_request_id]}"
+      FERRYRES_LOGGER.info(receive_string)
       f.close
     end
     case res.status
